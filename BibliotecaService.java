@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Regras de negócio da biblioteca. Metodos de emprestimo/devolucao serao adicionados em commits seguintes.
- */
 public class BibliotecaService {
 
     private final Map<Integer, Livro> livrosPorId = new HashMap<>();
@@ -30,5 +27,25 @@ public class BibliotecaService {
         return new ArrayList<>(leitoresPorId.values());
     }
 
-    // Proximas partes: cadastrarLivro, cadastrarLeitor, emprestar, devolver, buscas com Stream
+    public Livro cadastrarLivro(String titulo, String autor) {
+        if (titulo == null || titulo.isBlank() || autor == null || autor.isBlank()) {
+            throw new IllegalArgumentException("Titulo e autor sao obrigatorios.");
+        }
+
+        String tituloNormalizado = titulo.trim();
+        String autorNormalizado = autor.trim();
+
+        for (Livro existente : livrosPorId.values()) {
+            if (existente.getTitulo().equalsIgnoreCase(tituloNormalizado)
+                    && existente.getAutor().equalsIgnoreCase(autorNormalizado)) {
+                throw new IllegalArgumentException("Livro ja cadastrado com mesmo titulo e autor.");
+            }
+        }
+
+        int id = proximoIdLivro++;
+        Livro livro = new Livro(id, tituloNormalizado, autorNormalizado);
+        livrosPorId.put(id, livro);
+        return livro;
+    }
+
 }

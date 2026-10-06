@@ -42,7 +42,6 @@ public class Livro {
         this.leitorEmprestimoId = leitorEmprestimoId;
     }
 
-    /** JSON manual — escape de aspas no titulo/autor. */
     public String toJson() {
         String tituloJson = escapeJson(titulo);
         String autorJson = escapeJson(autor);

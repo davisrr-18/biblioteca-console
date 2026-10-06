@@ -1,5 +1,7 @@
 # Biblioteca Console
 
+Repositório: [github.com/davisrr-18/biblioteca-console](https://github.com/davisrr-18/biblioteca-console)
+
 Aplicação de linha de comando para gestão de acervo, leitores e empréstimos. Persistência em memória: os dados são reiniciados ao encerrar o programa.
 
 ## Stack

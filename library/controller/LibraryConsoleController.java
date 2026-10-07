@@ -4,9 +4,6 @@ import java.util.Scanner;
 
 import library.service.LibraryService;
 
-/**
- * Console presentation layer: menu, input, and output (Spring MVC "controller" analogue).
- */
 public class LibraryConsoleController {
 
     private static final String DIVIDER = "----------------------------------------";

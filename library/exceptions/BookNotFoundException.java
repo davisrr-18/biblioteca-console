@@ -1,3 +1,5 @@
+package library.exceptions;
+
 public class BookNotFoundException extends RuntimeException {
 
     public BookNotFoundException(int id) {

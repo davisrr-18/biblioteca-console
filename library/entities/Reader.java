@@ -1,3 +1,5 @@
+package library.entities;
+
 public class Reader {
 
     private final int id;

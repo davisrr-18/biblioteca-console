@@ -1,3 +1,5 @@
+package library.entities;
+
 public class Book {
 
     private final int id;

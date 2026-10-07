@@ -1,3 +1,5 @@
+package library.exceptions;
+
 public class BookNotOnLoanException extends RuntimeException {
 
     public BookNotOnLoanException(int id) {

@@ -1,59 +1,73 @@
+package library.controller;
+
 import java.util.List;
 import java.util.Scanner;
 
-public class LibraryApp {
+import library.entities.Book;
+import library.entities.Reader;
+import library.service.LibraryService;
+
+/**
+ * Console presentation layer: menu, input, and output (Spring MVC "controller" analogue).
+ */
+public class LibraryConsoleController {
 
     private static final String DIVIDER = "----------------------------------------";
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        LibraryService service = new LibraryService();
-        int option;
+    private final LibraryService libraryService;
+    private final Scanner scanner;
 
+    public LibraryConsoleController(LibraryService libraryService, Scanner scanner) {
+        this.libraryService = libraryService;
+        this.scanner = scanner;
+    }
+
+    public void run() {
         printWelcome();
+        int option;
 
         do {
             printMenu();
-            option = readInt(scanner, "Choose an option: ");
+            option = readInt("Choose an option: ");
             System.out.println();
-
-            switch (option) {
-                case 1 -> registerBook(scanner, service);
-                case 2 -> listBooksText(service);
-                case 3 -> listBooksJson(service);
-                case 4 -> searchBooksByTerm(scanner, service);
-                case 5 -> listAvailableBooks(service);
-                case 6 -> registerReader(scanner, service);
-                case 7 -> findReaderById(scanner, service);
-                case 8 -> listReadersJson(service);
-                case 9 -> loanBook(scanner, service);
-                case 10 -> returnBook(scanner, service);
-                case 0 -> printGoodbye();
-                default -> System.out.println("Invalid or not yet implemented option.");
-            }
-
+            handleOption(option);
             if (option != 0) {
-                waitForContinue(scanner);
+                waitForContinue();
             }
         } while (option != 0);
-
-        scanner.close();
     }
 
-    static void printWelcome() {
+    private void handleOption(int option) {
+        switch (option) {
+            case 1 -> registerBook();
+            case 2 -> listBooksText();
+            case 3 -> listBooksJson();
+            case 4 -> searchBooksByTerm();
+            case 5 -> listAvailableBooks();
+            case 6 -> registerReader();
+            case 7 -> findReaderById();
+            case 8 -> listReadersJson();
+            case 9 -> loanBook();
+            case 10 -> returnBook();
+            case 0 -> printGoodbye();
+            default -> System.out.println("Invalid or not yet implemented option.");
+        }
+    }
+
+    private void printWelcome() {
         System.out.println();
         System.out.println("  Library Console");
         System.out.println("  In-memory catalog and loan management");
         System.out.println();
     }
 
-    static void printGoodbye() {
+    private void printGoodbye() {
         beginSection("Exit");
         System.out.println("Thank you for using Library Console. Goodbye.");
         endSection();
     }
 
-    static void printMenu() {
+    private void printMenu() {
         System.out.println(DIVIDER);
         System.out.println(" MAIN MENU ");
         System.out.println(DIVIDER);
@@ -78,44 +92,44 @@ public class LibraryApp {
         System.out.println();
     }
 
-    static void beginSection(String title) {
+    private void beginSection(String title) {
         System.out.println(DIVIDER);
         System.out.println(" " + title);
         System.out.println(DIVIDER);
         System.out.println();
     }
 
-    static void endSection() {
+    private void endSection() {
         System.out.println();
     }
 
-    static void waitForContinue(Scanner scanner) {
+    private void waitForContinue() {
         System.out.println(DIVIDER);
-        readLine(scanner, "Press Enter to return to the menu...");
+        readLine("Press Enter to return to the menu...");
         System.out.println();
     }
 
-    static void listBooksText(LibraryService service) {
+    private void listBooksText() {
         beginSection("All books");
-        printBooks(service.listBooks(), "No books registered.");
+        printBooks(libraryService.listBooks(), "No books registered.");
         endSection();
     }
 
-    static void searchBooksByTerm(Scanner scanner, LibraryService service) {
+    private void searchBooksByTerm() {
         beginSection("Search books");
-        String term = readLine(scanner, "Search term: ");
+        String term = readLine("Search term: ");
         System.out.println();
-        printBooks(service.searchBooksByTerm(term), "No books found.");
+        printBooks(libraryService.searchBooksByTerm(term), "No books found.");
         endSection();
     }
 
-    static void listAvailableBooks(LibraryService service) {
+    private void listAvailableBooks() {
         beginSection("Available books");
-        printBooks(service.listAvailableBooks(), "No books available.");
+        printBooks(libraryService.listAvailableBooks(), "No books available.");
         endSection();
     }
 
-    static void printBooks(List<Book> books, String emptyMessage) {
+    private void printBooks(List<Book> books, String emptyMessage) {
         if (books.isEmpty()) {
             System.out.println("  " + emptyMessage);
             return;
@@ -135,25 +149,25 @@ public class LibraryApp {
         }
     }
 
-    static String truncate(String value, int maxLength) {
+    private static String truncate(String value, int maxLength) {
         if (value.length() <= maxLength) {
             return value;
         }
         return value.substring(0, maxLength - 3) + "...";
     }
 
-    static void listBooksJson(LibraryService service) {
+    private void listBooksJson() {
         beginSection("Books (JSON)");
-        System.out.println(service.listBooksAsJson());
+        System.out.println(libraryService.listBooksAsJson());
         endSection();
     }
 
-    static void registerReader(Scanner scanner, LibraryService service) {
+    private void registerReader() {
         beginSection("Register reader");
-        String name = readLine(scanner, "Reader name: ");
+        String name = readLine("Reader name: ");
         System.out.println();
         try {
-            Reader reader = service.registerReader(name);
+            Reader reader = libraryService.registerReader(name);
             System.out.println("  Registered:");
             System.out.println("  " + reader.toJson());
         } catch (IllegalArgumentException e) {
@@ -162,11 +176,11 @@ public class LibraryApp {
         endSection();
     }
 
-    static void findReaderById(Scanner scanner, LibraryService service) {
+    private void findReaderById() {
         beginSection("Find reader");
-        int id = readInt(scanner, "Reader id: ");
+        int id = readInt("Reader id: ");
         System.out.println();
-        service.findReaderById(id)
+        libraryService.findReaderById(id)
                 .ifPresentOrElse(
                         reader -> {
                             System.out.println("  Result:");
@@ -176,19 +190,19 @@ public class LibraryApp {
         endSection();
     }
 
-    static void listReadersJson(LibraryService service) {
+    private void listReadersJson() {
         beginSection("Readers (JSON)");
-        System.out.println(service.listReadersAsJson());
+        System.out.println(libraryService.listReadersAsJson());
         endSection();
     }
 
-    static void loanBook(Scanner scanner, LibraryService service) {
+    private void loanBook() {
         beginSection("Loan book");
-        int bookId = readInt(scanner, "Book id: ");
-        int readerId = readInt(scanner, "Reader id: ");
+        int bookId = readInt("Book id: ");
+        int readerId = readInt("Reader id: ");
         System.out.println();
         try {
-            service.loanBook(bookId, readerId);
+            libraryService.loanBook(bookId, readerId);
             System.out.println("  Loan recorded successfully.");
         } catch (RuntimeException e) {
             System.out.println("  Error: " + e.getMessage());
@@ -196,12 +210,12 @@ public class LibraryApp {
         endSection();
     }
 
-    static void returnBook(Scanner scanner, LibraryService service) {
+    private void returnBook() {
         beginSection("Return book");
-        int bookId = readInt(scanner, "Book id: ");
+        int bookId = readInt("Book id: ");
         System.out.println();
         try {
-            service.returnBook(bookId);
+            libraryService.returnBook(bookId);
             System.out.println("  Return recorded successfully.");
         } catch (RuntimeException e) {
             System.out.println("  Error: " + e.getMessage());
@@ -209,13 +223,13 @@ public class LibraryApp {
         endSection();
     }
 
-    static void registerBook(Scanner scanner, LibraryService service) {
+    private void registerBook() {
         beginSection("Register book");
-        String title = readLine(scanner, "Title: ");
-        String author = readLine(scanner, "Author: ");
+        String title = readLine("Title: ");
+        String author = readLine("Author: ");
         System.out.println();
         try {
-            Book book = service.registerBook(title, author);
+            Book book = libraryService.registerBook(title, author);
             System.out.println("  Book registered with id " + book.getId() + ".");
         } catch (IllegalArgumentException e) {
             System.out.println("  Error: " + e.getMessage());
@@ -223,12 +237,12 @@ public class LibraryApp {
         endSection();
     }
 
-    static String readLine(Scanner scanner, String prompt) {
+    private String readLine(String prompt) {
         System.out.print("  " + prompt);
         return scanner.nextLine();
     }
 
-    static int readInt(Scanner scanner, String prompt) {
+    private int readInt(String prompt) {
         while (true) {
             System.out.print("  " + prompt);
             String line = scanner.nextLine().trim();

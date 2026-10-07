@@ -1,3 +1,5 @@
+package library.service;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -5,6 +7,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import library.entities.Book;
+import library.entities.Reader;
+import library.exceptions.BookNotFoundException;
+import library.exceptions.BookNotOnLoanException;
+import library.exceptions.BookUnavailableException;
+import library.exceptions.ReaderNotFoundException;
 
 public class LibraryService {
 

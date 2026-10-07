@@ -9,21 +9,35 @@ Command-line application to manage catalog, readers, and loans. In-memory storag
 - Java 21+
 - Collections, Streams, Optional
 - Hand-built JSON on domain entities
+- Layered packages (console precursor to Spring MVC)
 
 ## Run
 
 ```bash
-javac -d out *.java
-java -cp out LibraryApp
+find library -name "*.java" | xargs javac -d out
+java -cp out library.app.LibraryApp
+```
+
+## Project layout
+
+```
+library/
+  app/           Entry point (main)
+  controller/    Console UI — menu and I/O
+  service/       Business rules and in-memory storage
+  entities/      Domain model (Book, Reader)
+  exceptions/    Domain-specific runtime exceptions
 ```
 
 ## Architecture
 
-| Layer | Responsibility |
-|--------|----------------|
-| `LibraryApp` | Menu, user input, output |
-| `LibraryService` | Business rules and storage |
-| `Book`, `Reader` | Domain model and JSON serialization |
+| Package | Role | Spring analogue (later) |
+|---------|------|-------------------------|
+| `library.app` | Bootstrap | `SpringApplication` |
+| `library.controller` | User interaction | `@RestController` |
+| `library.service` | Business logic | `@Service` |
+| `library.entities` | Domain data | `@Entity` / DTOs |
+| `library.exceptions` | Error types | `@ControllerAdvice` handlers |
 
 ## Features
 
@@ -43,4 +57,4 @@ java -cp out LibraryApp
 
 ## Roadmap
 
-File or database persistence, REST API, and automated tests.
+Maven module layout, file or database persistence, REST API, and automated tests.

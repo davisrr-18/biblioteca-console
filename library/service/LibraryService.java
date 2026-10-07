@@ -50,6 +50,14 @@ public class LibraryService {
         return ReaderJsonSerializer.toJsonArray(listReaders());
     }
 
+    public String registerReaderAsJson(String name) {
+        return ReaderJsonSerializer.toJson(registerReader(name));
+    }
+
+    public Optional<String> findReaderAsJsonById(int id) {
+        return findReaderById(id).map(ReaderJsonSerializer::toJson);
+    }
+
     public Reader registerReader(String name) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Reader name is required.");

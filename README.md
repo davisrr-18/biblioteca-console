@@ -41,6 +41,13 @@ library/
 | `library.serializer` | Entity → JSON | Jackson DTOs / mappers (later) |
 | `library.exceptions` | Error types | `@ControllerAdvice` handlers |
 
+**Dependency rules**
+
+- `controller` → `service` only (no `serializer`, no direct use of `exceptions`).
+- `service` → `entities`, `serializer`, `exceptions`.
+- `serializer` → `entities` (read-only mapping).
+- `entities` → no outward dependencies.
+
 ## Features
 
 - [x] Interactive menu with numeric input validation

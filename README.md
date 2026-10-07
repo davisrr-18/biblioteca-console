@@ -8,7 +8,7 @@ Command-line application to manage catalog, readers, and loans. In-memory storag
 
 - Java 21+
 - Collections, Streams, Optional
-- Hand-built JSON on domain entities
+- Hand-built JSON via `library.serializer` (entities stay persistence/format-agnostic)
 - Layered packages (console precursor to Spring MVC)
 
 ## Run
@@ -26,6 +26,7 @@ library/
   controller/    Console UI — menu and I/O
   service/       Business rules and in-memory storage
   entities/      Domain model (Book, Reader)
+  serializer/    JSON mapping (Book, Reader)
   exceptions/    Domain-specific runtime exceptions
 ```
 
@@ -36,7 +37,8 @@ library/
 | `library.app` | Bootstrap | `SpringApplication` |
 | `library.controller` | User interaction | `@RestController` |
 | `library.service` | Business logic | `@Service` |
-| `library.entities` | Domain data | `@Entity` / DTOs |
+| `library.entities` | Domain data | `@Entity` |
+| `library.serializer` | Entity → JSON | Jackson DTOs / mappers (later) |
 | `library.exceptions` | Error types | `@ControllerAdvice` handlers |
 
 ## Features

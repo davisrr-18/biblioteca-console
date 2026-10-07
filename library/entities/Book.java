@@ -43,22 +43,4 @@ public class Book {
     public void setBorrowedReaderId(Integer borrowedReaderId) {
         this.borrowedReaderId = borrowedReaderId;
     }
-
-    public String toJson() {
-        String titleJson = escapeJson(title);
-        String authorJson = escapeJson(author);
-        String readerPart = borrowedReaderId == null
-                ? "null"
-                : String.valueOf(borrowedReaderId);
-        return String.format(
-                "{\"id\":%d,\"title\":\"%s\",\"author\":\"%s\",\"available\":%s,\"borrowedReaderId\":%s}",
-                id, titleJson, authorJson, available, readerPart);
-    }
-
-    static String escapeJson(String value) {
-        if (value == null) {
-            return "";
-        }
-        return value.replace("\\", "\\\\").replace("\"", "\\\"");
-    }
 }

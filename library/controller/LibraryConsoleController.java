@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import library.entities.Book;
 import library.entities.Reader;
+import library.serializer.ReaderJsonSerializer;
 import library.service.LibraryService;
 
 /**
@@ -169,7 +170,7 @@ public class LibraryConsoleController {
         try {
             Reader reader = libraryService.registerReader(name);
             System.out.println("  Registered:");
-            System.out.println("  " + reader.toJson());
+            System.out.println("  " + ReaderJsonSerializer.toJson(reader));
         } catch (IllegalArgumentException e) {
             System.out.println("  Error: " + e.getMessage());
         }
@@ -184,7 +185,7 @@ public class LibraryConsoleController {
                 .ifPresentOrElse(
                         reader -> {
                             System.out.println("  Result:");
-                            System.out.println("  " + reader.toJson());
+                            System.out.println("  " + ReaderJsonSerializer.toJson(reader));
                         },
                         () -> System.out.println("  Reader not found."));
         endSection();

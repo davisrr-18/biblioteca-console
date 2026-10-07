@@ -17,8 +17,4 @@ public class Reader {
     public String getName() {
         return name;
     }
-
-    public String toJson() {
-        return String.format("{\"id\":%d,\"name\":\"%s\"}", id, Book.escapeJson(name));
-    }
 }

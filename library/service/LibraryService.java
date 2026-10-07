@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import library.entities.Book;
 import library.entities.Reader;
+import library.serializer.BookJsonSerializer;
+import library.serializer.ReaderJsonSerializer;
 import library.exceptions.BookNotFoundException;
 import library.exceptions.BookNotOnLoanException;
 import library.exceptions.BookUnavailableException;
@@ -37,13 +37,7 @@ public class LibraryService {
     }
 
     public String listBooksAsJson() {
-        List<Book> books = listBooks();
-        if (books.isEmpty()) {
-            return "[]";
-        }
-        return books.stream()
-                .map(Book::toJson)
-                .collect(Collectors.joining(",", "[", "]"));
+        return BookJsonSerializer.toJsonArray(listBooks());
     }
 
     public List<Reader> listReaders() {
@@ -53,13 +47,7 @@ public class LibraryService {
     }
 
     public String listReadersAsJson() {
-        List<Reader> readers = listReaders();
-        if (readers.isEmpty()) {
-            return "[]";
-        }
-        return readers.stream()
-                .map(Reader::toJson)
-                .collect(Collectors.joining(",", "[", "]"));
+        return ReaderJsonSerializer.toJsonArray(listReaders());
     }
 
     public Reader registerReader(String name) {

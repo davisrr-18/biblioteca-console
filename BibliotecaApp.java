@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Scanner;
 
 public class BibliotecaApp {
@@ -13,6 +14,8 @@ public class BibliotecaApp {
 
             switch (opcao) {
                 case 1 -> cadastrarLivro(scanner, service);
+                case 2 -> listarLivrosTexto(service);
+                case 3 -> listarLivrosJson(service);
                 case 0 -> System.out.println("Encerrando...");
                 default -> System.out.println("Opcao invalida ou ainda nao implementada.");
             }
@@ -25,7 +28,32 @@ public class BibliotecaApp {
         System.out.println();
         System.out.println("=== Biblioteca ===");
         System.out.println("1 - Cadastrar livro");
+        System.out.println("2 - Listar livros (texto)");
+        System.out.println("3 - Listar livros (JSON)");
         System.out.println("0 - Sair");
+    }
+
+    static void listarLivrosTexto(BibliotecaService service) {
+        List<Livro> livros = service.listarLivros();
+        if (livros.isEmpty()) {
+            System.out.println("Nenhum livro cadastrado.");
+            return;
+        }
+        for (Livro livro : livros) {
+            String status = livro.isDisponivel()
+                    ? "disponivel"
+                    : "emprestado (leitor id " + livro.getLeitorEmprestimoId() + ")";
+            System.out.printf(
+                    "id=%d | %s | %s | %s%n",
+                    livro.getId(),
+                    livro.getTitulo(),
+                    livro.getAutor(),
+                    status);
+        }
+    }
+
+    static void listarLivrosJson(BibliotecaService service) {
+        System.out.println(service.listarLivrosComoJson());
     }
 
     static void cadastrarLivro(Scanner scanner, BibliotecaService service) {

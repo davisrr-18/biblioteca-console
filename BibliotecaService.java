@@ -1,8 +1,10 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class BibliotecaService {
 
@@ -20,7 +22,19 @@ public class BibliotecaService {
     }
 
     public List<Livro> listarLivros() {
-        return new ArrayList<>(livrosPorId.values());
+        return livrosPorId.values().stream()
+                .sorted(Comparator.comparingInt(Livro::getId))
+                .toList();
+    }
+
+    public String listarLivrosComoJson() {
+        List<Livro> livros = listarLivros();
+        if (livros.isEmpty()) {
+            return "[]";
+        }
+        return livros.stream()
+                .map(Livro::toJson)
+                .collect(Collectors.joining(",", "[", "]"));
     }
 
     public List<Leitor> listarLeitores() {

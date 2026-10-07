@@ -29,7 +29,7 @@ java -cp out BibliotecaApp
 
 - [x] Menu interativo com validação de opção numérica
 - [x] Cadastro de livros (ID automático, título e autor obrigatórios, sem duplicidade título+autor)
-- [ ] Listagem de livros (texto e JSON)
+- [x] Listagem de livros (texto e JSON)
 - [ ] Cadastro e consulta de leitores (JSON)
 - [ ] Empréstimo e devolução
 - [ ] Busca de livros por título ou autor

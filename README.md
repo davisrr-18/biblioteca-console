@@ -1,46 +1,46 @@
-# Biblioteca Console
+# Library Console
 
-Repositório: [github.com/davisrr-18/biblioteca-console](https://github.com/davisrr-18/biblioteca-console)
+Repository: [github.com/davisrr-18/biblioteca-console](https://github.com/davisrr-18/biblioteca-console)
 
-Aplicação de linha de comando para gestão de acervo, leitores e empréstimos. Persistência em memória: os dados são reiniciados ao encerrar o programa.
+Command-line application to manage catalog, readers, and loans. In-memory storage: data is cleared when the program exits.
 
 ## Stack
 
 - Java 21+
 - Collections, Streams, Optional
-- Saídas JSON construídas manualmente nas entidades
+- Hand-built JSON on domain entities
 
-## Executar
+## Run
 
 ```bash
 javac -d out *.java
-java -cp out BibliotecaApp
+java -cp out LibraryApp
 ```
 
-## Arquitetura
+## Architecture
 
-| Camada | Responsabilidade |
-|--------|------------------|
-| `BibliotecaApp` | Menu, entrada do usuário, mensagens |
-| `BibliotecaService` | Regras de negócio e armazenamento |
-| `Livro`, `Leitor` | Modelo de domínio e serialização JSON |
+| Layer | Responsibility |
+|--------|----------------|
+| `LibraryApp` | Menu, user input, output |
+| `LibraryService` | Business rules and storage |
+| `Book`, `Reader` | Domain model and JSON serialization |
 
-## Funcionalidades
+## Features
 
-- [x] Menu interativo com validação de opção numérica
-- [x] Cadastro de livros (ID automático, título e autor obrigatórios, sem duplicidade título+autor)
-- [x] Listagem de livros (texto e JSON)
-- [x] Cadastro e consulta de leitores (JSON)
-- [x] Empréstimo e devolução
-- [x] Busca de livros por título ou autor
-- [x] Relatório de exemplares disponíveis
+- [x] Interactive menu with numeric input validation
+- [x] Book registration (auto ID, required title/author, no duplicate title+author)
+- [x] Book listing (text and JSON)
+- [x] Reader registration and lookup (JSON)
+- [x] Loan and return
+- [x] Book search by title or author
+- [x] Available copies report
 
-## Regras de negócio
+## Business rules
 
-- Cada livro recebe um identificador numérico sequencial.
-- Não é permitido cadastrar dois livros com o mesmo título **e** o mesmo autor (comparação sem distinção de maiúsculas/minúsculas).
-- Leitores possuem ID sequencial e nome; empréstimos associam livro a leitor enquanto o exemplar estiver indisponível.
+- Each book gets a sequential numeric id.
+- Two books cannot share the same title **and** author (case-insensitive).
+- Readers have sequential id and name; loans link a book to a reader while the copy is unavailable.
 
-## Evolução prevista
+## Roadmap
 
-Persistência em arquivo ou banco, API REST e testes automatizados.
+File or database persistence, REST API, and automated tests.

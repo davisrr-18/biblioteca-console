@@ -55,6 +55,9 @@ library/
 - Two books cannot share the same title **and** author (case-insensitive).
 - Readers have sequential id and name; loans link a book to a reader while the copy is unavailable.
 
-## Roadmap
+## Planned enhancements
 
-Maven module layout, file or database persistence, REST API, and automated tests.
+- Maven module layout (`src/main/java`)
+- Persistence (file or database)
+- REST API replacing the console controller
+- Automated tests (JUnit)

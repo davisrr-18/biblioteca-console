@@ -16,6 +16,9 @@ public class BibliotecaApp {
                 case 1 -> cadastrarLivro(scanner, service);
                 case 2 -> listarLivrosTexto(service);
                 case 3 -> listarLivrosJson(service);
+                case 4 -> cadastrarLeitor(scanner, service);
+                case 5 -> buscarLeitorPorId(scanner, service);
+                case 6 -> listarLeitoresJson(service);
                 case 0 -> System.out.println("Encerrando...");
                 default -> System.out.println("Opcao invalida ou ainda nao implementada.");
             }
@@ -30,6 +33,9 @@ public class BibliotecaApp {
         System.out.println("1 - Cadastrar livro");
         System.out.println("2 - Listar livros (texto)");
         System.out.println("3 - Listar livros (JSON)");
+        System.out.println("4 - Cadastrar leitor");
+        System.out.println("5 - Buscar leitor por id (JSON)");
+        System.out.println("6 - Listar leitores (JSON)");
         System.out.println("0 - Sair");
     }
 
@@ -54,6 +60,28 @@ public class BibliotecaApp {
 
     static void listarLivrosJson(BibliotecaService service) {
         System.out.println(service.listarLivrosComoJson());
+    }
+
+    static void cadastrarLeitor(Scanner scanner, BibliotecaService service) {
+        String nome = lerLinha(scanner, "Nome do leitor: ");
+        try {
+            Leitor leitor = service.cadastrarLeitor(nome);
+            System.out.println(leitor.toJson());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
+
+    static void buscarLeitorPorId(Scanner scanner, BibliotecaService service) {
+        int id = lerInteiro(scanner, "Id do leitor: ");
+        service.buscarLeitorPorId(id)
+                .ifPresentOrElse(
+                        leitor -> System.out.println(leitor.toJson()),
+                        () -> System.out.println("Leitor nao encontrado."));
+    }
+
+    static void listarLeitoresJson(BibliotecaService service) {
+        System.out.println(service.listarLeitoresComoJson());
     }
 
     static void cadastrarLivro(Scanner scanner, BibliotecaService service) {

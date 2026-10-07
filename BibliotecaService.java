@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +37,38 @@ public class BibliotecaService {
     }
 
     public List<Leitor> listarLeitores() {
-        return new ArrayList<>(leitoresPorId.values());
+        return leitoresPorId.values().stream()
+                .sorted(Comparator.comparingInt(Leitor::getId))
+                .toList();
+    }
+
+    public String listarLeitoresComoJson() {
+        List<Leitor> leitores = listarLeitores();
+        if (leitores.isEmpty()) {
+            return "[]";
+        }
+        return leitores.stream()
+                .map(Leitor::toJson)
+                .collect(Collectors.joining(",", "[", "]"));
+    }
+
+    public Leitor cadastrarLeitor(String nome) {
+        if (nome == null || nome.isBlank()) {
+            throw new IllegalArgumentException("Nome do leitor e obrigatorio.");
+        }
+
+        String nomeNormalizado = nome.trim();
+
+        for (Leitor existente : leitoresPorId.values()) {
+            if (existente.getNome().equalsIgnoreCase(nomeNormalizado)) {
+                throw new IllegalArgumentException("Leitor ja cadastrado com este nome.");
+            }
+        }
+
+        int id = proximoIdLeitor++;
+        Leitor leitor = new Leitor(id, nomeNormalizado);
+        leitoresPorId.put(id, leitor);
+        return leitor;
     }
 
     public Livro cadastrarLivro(String titulo, String autor) {

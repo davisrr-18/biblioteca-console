@@ -92,4 +92,31 @@ public class BibliotecaService {
         return livro;
     }
 
+    public void emprestarLivro(int livroId, int leitorId) {
+        Livro livro = buscarLivroPorId(livroId)
+                .orElseThrow(() -> new LivroNaoEncontradoException(livroId));
+
+        buscarLeitorPorId(leitorId)
+                .orElseThrow(() -> new LeitorNaoEncontradoException(leitorId));
+
+        if (!livro.isDisponivel()) {
+            throw new LivroIndisponivelException(livroId);
+        }
+
+        livro.setDisponivel(false);
+        livro.setLeitorEmprestimoId(leitorId);
+    }
+
+    public void devolverLivro(int livroId) {
+        Livro livro = buscarLivroPorId(livroId)
+                .orElseThrow(() -> new LivroNaoEncontradoException(livroId));
+
+        if (livro.isDisponivel()) {
+            throw new LivroNaoEmprestadoException(livroId);
+        }
+
+        livro.setDisponivel(true);
+        livro.setLeitorEmprestimoId(null);
+    }
+
 }

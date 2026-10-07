@@ -31,7 +31,7 @@ java -cp out BibliotecaApp
 - [x] Cadastro de livros (ID automático, título e autor obrigatórios, sem duplicidade título+autor)
 - [x] Listagem de livros (texto e JSON)
 - [x] Cadastro e consulta de leitores (JSON)
-- [ ] Empréstimo e devolução
+- [x] Empréstimo e devolução
 - [ ] Busca de livros por título ou autor
 - [ ] Relatório de exemplares disponíveis
 

@@ -27,6 +27,7 @@ library/
   service/       Business rules and in-memory storage
   entities/      Domain model (Book, Reader)
   serializer/    JSON mapping (Book, Reader)
+  view/          Console text formatting (used by service)
   exceptions/    Domain-specific runtime exceptions
 ```
 
@@ -39,13 +40,14 @@ library/
 | `library.service` | Business logic | `@Service` |
 | `library.entities` | Domain data | `@Entity` |
 | `library.serializer` | Entity → JSON | Jackson DTOs / mappers (later) |
+| `library.view` | Entity → console text | View models / presenters (later) |
 | `library.exceptions` | Error types | `@ControllerAdvice` handlers |
 
 **Dependency rules**
 
-- `controller` → `service` only (no `serializer`, no direct use of `exceptions`).
-- `service` → `entities`, `serializer`, `exceptions`.
-- `serializer` → `entities` (read-only mapping).
+- `controller` → `service` only (menu, input, prints strings returned by the service).
+- `service` → `entities`, `serializer`, `view`, `exceptions`.
+- `serializer` / `view` → `entities` (read-only mapping).
 - `entities` → no outward dependencies.
 
 ## Features

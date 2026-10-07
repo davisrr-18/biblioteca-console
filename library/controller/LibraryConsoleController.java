@@ -1,9 +1,7 @@
 package library.controller;
 
-import java.util.List;
 import java.util.Scanner;
 
-import library.entities.Book;
 import library.service.LibraryService;
 
 /**
@@ -34,6 +32,8 @@ public class LibraryConsoleController {
                 waitForContinue();
             }
         } while (option != 0);
+
+        scanner.close();
     }
 
     private void handleOption(int option) {
@@ -108,9 +108,17 @@ public class LibraryConsoleController {
         System.out.println();
     }
 
+    private void printServiceOutput(String output) {
+        System.out.println(output);
+    }
+
+    private void printServiceOutputIndented(String output) {
+        System.out.println("  " + output);
+    }
+
     private void listBooksText() {
         beginSection("All books");
-        printBooks(libraryService.listBooks(), "No books registered.");
+        printServiceOutput(libraryService.listBooksAsText());
         endSection();
     }
 
@@ -118,46 +126,19 @@ public class LibraryConsoleController {
         beginSection("Search books");
         String term = readLine("Search term: ");
         System.out.println();
-        printBooks(libraryService.searchBooksByTerm(term), "No books found.");
+        printServiceOutput(libraryService.searchBooksAsText(term));
         endSection();
     }
 
     private void listAvailableBooks() {
         beginSection("Available books");
-        printBooks(libraryService.listAvailableBooks(), "No books available.");
+        printServiceOutput(libraryService.listAvailableBooksAsText());
         endSection();
-    }
-
-    private void printBooks(List<Book> books, String emptyMessage) {
-        if (books.isEmpty()) {
-            System.out.println("  " + emptyMessage);
-            return;
-        }
-        System.out.printf("  %-4s | %-24s | %-20s | %s%n", "ID", "Title", "Author", "Status");
-        System.out.println("  " + "-".repeat(72));
-        for (Book book : books) {
-            String status = book.isAvailable()
-                    ? "available"
-                    : "on loan (reader " + book.getBorrowedReaderId() + ")";
-            System.out.printf(
-                    "  %-4d | %-24s | %-20s | %s%n",
-                    book.getId(),
-                    truncate(book.getTitle(), 24),
-                    truncate(book.getAuthor(), 20),
-                    status);
-        }
-    }
-
-    private static String truncate(String value, int maxLength) {
-        if (value.length() <= maxLength) {
-            return value;
-        }
-        return value.substring(0, maxLength - 3) + "...";
     }
 
     private void listBooksJson() {
         beginSection("Books (JSON)");
-        System.out.println(libraryService.listBooksAsJson());
+        printServiceOutput(libraryService.listBooksAsJson());
         endSection();
     }
 
@@ -166,9 +147,7 @@ public class LibraryConsoleController {
         String name = readLine("Reader name: ");
         System.out.println();
         try {
-            String json = libraryService.registerReaderAsJson(name);
-            System.out.println("  Registered:");
-            System.out.println("  " + json);
+            printServiceOutput(libraryService.registerReaderDisplay(name));
         } catch (IllegalArgumentException e) {
             System.out.println("  Error: " + e.getMessage());
         }
@@ -179,19 +158,13 @@ public class LibraryConsoleController {
         beginSection("Find reader");
         int id = readInt("Reader id: ");
         System.out.println();
-        libraryService.findReaderAsJsonById(id)
-                .ifPresentOrElse(
-                        json -> {
-                            System.out.println("  Result:");
-                            System.out.println("  " + json);
-                        },
-                        () -> System.out.println("  Reader not found."));
+        printServiceOutput(libraryService.findReaderDisplayById(id));
         endSection();
     }
 
     private void listReadersJson() {
         beginSection("Readers (JSON)");
-        System.out.println(libraryService.listReadersAsJson());
+        printServiceOutput(libraryService.listReadersAsJson());
         endSection();
     }
 
@@ -201,8 +174,7 @@ public class LibraryConsoleController {
         int readerId = readInt("Reader id: ");
         System.out.println();
         try {
-            libraryService.loanBook(bookId, readerId);
-            System.out.println("  Loan recorded successfully.");
+            printServiceOutputIndented(libraryService.loanBookWithMessage(bookId, readerId));
         } catch (RuntimeException e) {
             System.out.println("  Error: " + e.getMessage());
         }
@@ -214,8 +186,7 @@ public class LibraryConsoleController {
         int bookId = readInt("Book id: ");
         System.out.println();
         try {
-            libraryService.returnBook(bookId);
-            System.out.println("  Return recorded successfully.");
+            printServiceOutputIndented(libraryService.returnBookWithMessage(bookId));
         } catch (RuntimeException e) {
             System.out.println("  Error: " + e.getMessage());
         }
@@ -228,8 +199,7 @@ public class LibraryConsoleController {
         String author = readLine("Author: ");
         System.out.println();
         try {
-            Book book = libraryService.registerBook(title, author);
-            System.out.println("  Book registered with id " + book.getId() + ".");
+            printServiceOutputIndented(libraryService.registerBookConfirmation(title, author));
         } catch (IllegalArgumentException e) {
             System.out.println("  Error: " + e.getMessage());
         }

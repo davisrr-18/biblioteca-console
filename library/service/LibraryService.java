@@ -10,6 +10,7 @@ import library.entities.Book;
 import library.entities.Reader;
 import library.serializer.BookJsonSerializer;
 import library.serializer.ReaderJsonSerializer;
+import library.view.BookTextFormatter;
 import library.exceptions.BookNotFoundException;
 import library.exceptions.BookNotOnLoanException;
 import library.exceptions.BookUnavailableException;
@@ -40,6 +41,23 @@ public class LibraryService {
         return BookJsonSerializer.toJsonArray(listBooks());
     }
 
+    public String listBooksAsText() {
+        return BookTextFormatter.formatTable(listBooks(), "No books registered.");
+    }
+
+    public String searchBooksAsText(String term) {
+        return BookTextFormatter.formatTable(searchBooksByTerm(term), "No books found.");
+    }
+
+    public String listAvailableBooksAsText() {
+        return BookTextFormatter.formatTable(listAvailableBooks(), "No books available.");
+    }
+
+    public String registerBookConfirmation(String title, String author) {
+        Book book = registerBook(title, author);
+        return "Book registered with id " + book.getId() + ".";
+    }
+
     public List<Reader> listReaders() {
         return readersById.values().stream()
                 .sorted(Comparator.comparingInt(Reader::getId))
@@ -50,12 +68,15 @@ public class LibraryService {
         return ReaderJsonSerializer.toJsonArray(listReaders());
     }
 
-    public String registerReaderAsJson(String name) {
-        return ReaderJsonSerializer.toJson(registerReader(name));
+    public String registerReaderDisplay(String name) {
+        String json = ReaderJsonSerializer.toJson(registerReader(name));
+        return "  Registered:\n  " + json;
     }
 
-    public Optional<String> findReaderAsJsonById(int id) {
-        return findReaderById(id).map(ReaderJsonSerializer::toJson);
+    public String findReaderDisplayById(int id) {
+        return findReaderById(id)
+                .map(reader -> "  Result:\n  " + ReaderJsonSerializer.toJson(reader))
+                .orElse("  Reader not found.");
     }
 
     public Reader registerReader(String name) {
@@ -98,7 +119,17 @@ public class LibraryService {
         return book;
     }
 
-    public void loanBook(int bookId, int readerId) {
+    public String loanBookWithMessage(int bookId, int readerId) {
+        loanBook(bookId, readerId);
+        return "Loan recorded successfully.";
+    }
+
+    public String returnBookWithMessage(int bookId) {
+        returnBook(bookId);
+        return "Return recorded successfully.";
+    }
+
+    private void loanBook(int bookId, int readerId) {
         Book book = findBookById(bookId)
                 .orElseThrow(() -> new BookNotFoundException(bookId));
 
@@ -136,7 +167,7 @@ public class LibraryService {
                 || book.getAuthor().toLowerCase(Locale.ROOT).contains(normalizedTerm);
     }
 
-    public void returnBook(int bookId) {
+    private void returnBook(int bookId) {
         Book book = findBookById(bookId)
                 .orElseThrow(() -> new BookNotFoundException(bookId));
 

@@ -21,6 +21,8 @@ public class BibliotecaApp {
                 case 6 -> listarLeitoresJson(service);
                 case 7 -> emprestarLivro(scanner, service);
                 case 8 -> devolverLivro(scanner, service);
+                case 9 -> buscarLivrosPorTermo(scanner, service);
+                case 10 -> listarLivrosDisponiveis(service);
                 case 0 -> System.out.println("Encerrando...");
                 default -> System.out.println("Opcao invalida ou ainda nao implementada.");
             }
@@ -40,13 +42,27 @@ public class BibliotecaApp {
         System.out.println("6 - Listar leitores (JSON)");
         System.out.println("7 - Emprestar livro");
         System.out.println("8 - Devolver livro");
+        System.out.println("9 - Buscar livros (titulo ou autor)");
+        System.out.println("10 - Listar livros disponiveis");
         System.out.println("0 - Sair");
     }
 
     static void listarLivrosTexto(BibliotecaService service) {
-        List<Livro> livros = service.listarLivros();
+        imprimirLivros(service.listarLivros(), "Nenhum livro cadastrado.");
+    }
+
+    static void buscarLivrosPorTermo(Scanner scanner, BibliotecaService service) {
+        String termo = lerLinha(scanner, "Termo de busca: ");
+        imprimirLivros(service.buscarLivrosPorTermo(termo), "Nenhum livro encontrado.");
+    }
+
+    static void listarLivrosDisponiveis(BibliotecaService service) {
+        imprimirLivros(service.listarLivrosDisponiveis(), "Nenhum livro disponivel.");
+    }
+
+    static void imprimirLivros(List<Livro> livros, String mensagemVazia) {
         if (livros.isEmpty()) {
-            System.out.println("Nenhum livro cadastrado.");
+            System.out.println(mensagemVazia);
             return;
         }
         for (Livro livro : livros) {

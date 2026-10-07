@@ -1,6 +1,7 @@
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -105,6 +106,29 @@ public class BibliotecaService {
 
         livro.setDisponivel(false);
         livro.setLeitorEmprestimoId(leitorId);
+    }
+
+    public List<Livro> buscarLivrosPorTermo(String termo) {
+        if (termo == null || termo.isBlank()) {
+            return List.of();
+        }
+        String termoNormalizado = termo.trim().toLowerCase(Locale.ROOT);
+        return livrosPorId.values().stream()
+                .filter(livro -> contemTermo(livro, termoNormalizado))
+                .sorted(Comparator.comparing(livro -> livro.getTitulo().toLowerCase(Locale.ROOT)))
+                .toList();
+    }
+
+    public List<Livro> listarLivrosDisponiveis() {
+        return livrosPorId.values().stream()
+                .filter(Livro::isDisponivel)
+                .sorted(Comparator.comparing(livro -> livro.getTitulo().toLowerCase(Locale.ROOT)))
+                .toList();
+    }
+
+    private static boolean contemTermo(Livro livro, String termoNormalizado) {
+        return livro.getTitulo().toLowerCase(Locale.ROOT).contains(termoNormalizado)
+                || livro.getAutor().toLowerCase(Locale.ROOT).contains(termoNormalizado);
     }
 
     public void devolverLivro(int livroId) {

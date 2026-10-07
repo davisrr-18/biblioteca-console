@@ -32,8 +32,8 @@ java -cp out BibliotecaApp
 - [x] Listagem de livros (texto e JSON)
 - [x] Cadastro e consulta de leitores (JSON)
 - [x] Empréstimo e devolução
-- [ ] Busca de livros por título ou autor
-- [ ] Relatório de exemplares disponíveis
+- [x] Busca de livros por título ou autor
+- [x] Relatório de exemplares disponíveis
 
 ## Regras de negócio
 

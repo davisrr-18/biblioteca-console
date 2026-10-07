@@ -1,6 +1,6 @@
 # Library Console
 
-Repository: [github.com/davisrr-18/biblioteca-console](https://github.com/davisrr-18/biblioteca-console)
+Repository: [github.com/davisrr-18/library-console](https://github.com/davisrr-18/library-console)
 
 Command-line application to manage catalog, readers, and loans. In-memory storage: data is cleared when the program exits.
 
